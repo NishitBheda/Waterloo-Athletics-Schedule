@@ -22,7 +22,6 @@ async function renderScheduleData() {
     let schedule = await getScheduleData();
     let html = '';
     schedule.forEach(scheduleElement => {
-        console.log(scheduleElement);
         let startingDate = new Date(scheduleElement.start);
         let endingDate = new Date(scheduleElement.end)
         let htmlSegment = 
