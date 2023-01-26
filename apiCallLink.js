@@ -1,13 +1,17 @@
 const params = new URLSearchParams(window.location.search);
-let startDate = document.getElementById("startDate");
-startDate.setAttribute("value", params.get('StartingDate'));
-let endDate = document.getElementById("endDate");
-endDate.setAttribute("value", params.get('EndingDate'));
+let date = document.getElementById("date");
+date.setAttribute("value", params.get('date'));
 let facilityName = params.get('SelectedFacility');
 
 document.getElementById('SelectedFacility').selectedIndex = document.querySelector("option[value='" + facilityName + "']").index
 let facilityId = document.querySelector("option[value='" + facilityName + "']").getAttribute('name');
-const apiCallLink = `https://warrior.uwaterloo.ca/Facility/GetScheduleCustomAppointments?selectedId=${facilityId}&start=${startDate.getAttribute('value')}T00%3A00%3A00-04%3A00&end=${endDate.getAttribute('value')}T00%3A00%3A00-04%3A00`
+const today = date.getAttribute('value');
+let split = today.split('-');
+const universal_date_format_tomorrow = new Date(parseInt(split[0]), parseInt(split[1] - 1), parseInt(split[2]) + 1, 0,0,0,0);
+const tomorrow = universal_date_format_tomorrow.toISOString().split('T')[0];
+console.log("Showing results from " + today + " to " + tomorrow);
+
+const apiCallLink = `https://warrior.uwaterloo.ca/Facility/GetScheduleCustomAppointments?selectedId=${facilityId}&start=${today}T00%3A00%3A00-04%3A00&end=${tomorrow}T00%3A00%3A00-04%3A00`
 
 async function getScheduleData() {
     try {
