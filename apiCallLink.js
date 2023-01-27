@@ -1,5 +1,12 @@
-const params = new URLSearchParams(window.location.search);
+// const currentDate = new Date().toISOString().split('T')[0];
 let date = document.getElementById("date");
+const yesterday = new Date();
+yesterday.setDate(yesterday.getDate()-1);
+date.valueAsDate = yesterday;
+// date.setAttribute("value", currentDate );
+
+const params = new URLSearchParams(window.location.search);
+
 date.setAttribute("value", params.get('date'));
 let facilityName = params.get('SelectedFacility');
 
