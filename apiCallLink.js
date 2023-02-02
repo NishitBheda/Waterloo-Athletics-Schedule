@@ -1,24 +1,25 @@
-// const currentDate = new Date().toISOString().split('T')[0];
-let date = document.getElementById("date");
-const yesterday = new Date();
-yesterday.setDate(yesterday.getDate()-1);
-date.valueAsDate = yesterday;
-// date.setAttribute("value", currentDate );
+const date = document.getElementById("date");
 
 const params = new URLSearchParams(window.location.search);
 
 date.setAttribute("value", params.get('date'));
+if(date.value == '') {
+    let todays_date = new Date();
+    todays_date.setHours(todays_date.getHours()-5);
+    const the_date = todays_date.toISOString().split('T')[0];
+    date.setAttribute('value', the_date);
+}
+
 let facilityName = params.get('SelectedFacility');
 
 document.getElementById('SelectedFacility').selectedIndex = document.querySelector("option[value='" + facilityName + "']").index
 let facilityId = document.querySelector("option[value='" + facilityName + "']").getAttribute('name');
-const today = date.getAttribute('value');
-let split = today.split('-');
-const universal_date_format_tomorrow = new Date(parseInt(split[0]), parseInt(split[1] - 1), parseInt(split[2]) + 1, 0,0,0,0);
-const tomorrow = universal_date_format_tomorrow.toISOString().split('T')[0];
-console.log("Showing results from " + today + " to " + tomorrow);
+const current_date_value = date.getAttribute('value');
+let split = current_date_value.split('-');
+const tomorrow_date_based_on_current_value = new Date(parseInt(split[0]), parseInt(split[1] - 1), parseInt(split[2]) + 1, 0,0,0,0).toISOString().split('T')[0];
+console.log("Showing results from " + current_date_value + " to " + tomorrow_date_based_on_current_value);
 
-const apiCallLink = `https://warrior.uwaterloo.ca/Facility/GetScheduleCustomAppointments?selectedId=${facilityId}&start=${today}T00%3A00%3A00-04%3A00&end=${tomorrow}T00%3A00%3A00-04%3A00`
+const apiCallLink = `https://warrior.uwaterloo.ca/Facility/GetScheduleCustomAppointments?selectedId=${facilityId}&start=${current_date_value}T00%3A00%3A00-04%3A00&end=${tomorrow_date_based_on_current_value}T00%3A00%3A00-04%3A00`
 
 async function getScheduleData() {
     try {
@@ -51,16 +52,4 @@ async function renderScheduleData() {
 }
 
 renderScheduleData();
-
-// let scheduleData = callApi(apiCallLink);
-
-// async function callApi(url) {
-//     await fetch(url)
-//         .then( response => response.json() )
-//         .then( data => {
-//             console.log(data)
-//             return data;
-//         });
-// }
-// // console.log(scheduleData);
 
